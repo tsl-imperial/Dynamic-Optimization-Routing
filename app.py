@@ -103,79 +103,80 @@ def app_main():
     # add an index into the distance and time (for both reference and when reading and writing data)
     # will have to change the way I'm subsetting data and stuff
     
-    if session_state.username == "":
-        check_credentials(session_state)
-    else:
-        st.sidebar.markdown(f'### Hello, {"Admin" if session_state.user_type == "admin" else session_state.username}')
+    # if session_state.username == "":
+    #     check_credentials(session_state)
+    # else:
+    st.sidebar.markdown(f'### Hello, {"Admin" if session_state.user_type == "admin" else session_state.username}')
 
-        app_options = ["Order Evaluation", "Dispatch Optimization", "Release Notes"]
-        show_app_options = [f for f in app_options if country_config.get('drt_functionality', f).title() == 'True']
+    app_options = ["Order Evaluation", "Dispatch Optimization", "Release Notes"]
+    show_app_options = [f for f in app_options if country_config.get('drt_functionality', f).title() == 'True']
+    
+    if session_state.user_type == "admin":
+        show_app_options = ["Tool Administration"] + app_options
         
-        if session_state.user_type == "admin":
-            show_app_options = ["Tool Administration"] + app_options
-        app_mode = st.sidebar.selectbox("", show_app_options)
+    app_mode = st.sidebar.selectbox("", show_app_options)
 
-        title_column, filename_column, space = st.columns([3.8, 1, 0.2])
-        title_column.title(app_mode)
+    title_column, filename_column, space = st.columns([3.8, 1, 0.2])
+    title_column.title(app_mode)
 
-        if app_mode == "Dispatch Optimization":
-            if session_state.scenario_data: 
-                routing_options = ["Upload data", "Refine data", "Solve scenario", "Review results"] 
-            else:
-                routing_options = ["Upload data"]
-            routing_mode = st.sidebar.radio("", routing_options) 
+    if app_mode == "Dispatch Optimization":
+        if session_state.scenario_data: 
+            routing_options = ["Upload data", "Refine data", "Solve scenario", "Review results"] 
+        else:
+            routing_options = ["Upload data"]
+        routing_mode = st.sidebar.radio("", routing_options) 
 
-            # Populate scenario info
-            if session_state.scenario_data is not None: 
-                # st.sidebar.markdown(f"### Scenario {session_state.scenario_data['Scenario']}")
-                filename_column.markdown(f"### Scenario {session_state.scenario_data['Scenario']}")
-                download_scenario = filename_column.button("Download scenario")
-                if download_scenario:
-                    filename_column.markdown(get_binary_file_downloader_html(session_state.scenario_file, f"Scenario  {session_state.scenario_data['Scenario']}"), unsafe_allow_html=True)
+        # Populate scenario info
+        if session_state.scenario_data is not None: 
+            # st.sidebar.markdown(f"### Scenario {session_state.scenario_data['Scenario']}")
+            filename_column.markdown(f"### Scenario {session_state.scenario_data['Scenario']}")
+            download_scenario = filename_column.button("Download scenario")
+            if download_scenario:
+                filename_column.markdown(get_binary_file_downloader_html(session_state.scenario_file, f"Scenario  {session_state.scenario_data['Scenario']}"), unsafe_allow_html=True)
 
-                    # download_df_dict = create_download_dict(session_state.scenario_data)
-                    # filename = session_state.scenario_data["Scenario"]
-                    # filename_column.markdown(get_table_download_link_xlsx("scenario", f"Scenario {filename}", **dict(download_df_dict)), unsafe_allow_html=True)
+                # download_df_dict = create_download_dict(session_state.scenario_data)
+                # filename = session_state.scenario_data["Scenario"]
+                # filename_column.markdown(get_table_download_link_xlsx("scenario", f"Scenario {filename}", **dict(download_df_dict)), unsafe_allow_html=True)
 
-                # Due to email policy change, disable this functionality for now.
-                # email_scenario = filename_column.button("Email scenario")
-                # if email_scenario:
-                #     agent = get_email_agent()
-                #     subject = f'{session_state.country.capitalize()} Routing tool: Scenario file {session_state.scenario_data["Scenario"]}'
-                #     body = "Please find the scenario file attached"
-                #     save_scenario(session_state.scenario_file, session_state.scenario_data)
-                #     agent.send(session_state.username, subject, body, "", msg_type="html", attach_file=session_state.scenario_file)
-                #     send_date = datetime.now().strftime('%m/%d/%Y %H:%M')
-                #     filename_column.markdown(f"###### Sent: {send_date}")
-                    
-            try:
-                if routing_mode == "Upload data":
-                    app_upload(session_state)
-                elif routing_mode == "Refine data":
-                    if session_state.scenario_data is None:
-                        st.markdown(f"### {warning_scenario_message}")
-                    else:
-                        app_refine(session_state)
-                elif routing_mode == "Solve scenario":
-                    if session_state.scenario_data is None:
-                        st.markdown(f"### {warning_scenario_message}")
-                    else:
-                        app_optimize(session_state)
-                elif routing_mode == "Review results":
-                    if session_state.scenario_data is None:
-                        st.markdown(f"### {warning_scenario_message}")
-                    elif pd.isna(session_state.scenario_data['Solved']):
-                        st.markdown(f"### {warning_solve_message}")
-                    else:
-                        app_review(session_state)
-            except Exception as e:
-                st.error(f"Application Error: {e}\n{traceback.format_exc()}")
-        elif app_mode == "Tool Administration":
-            app_update_reference_data(session_state)
-        elif app_mode == "Order Evaluation": 
-            app_drorders(session_state)
-        elif app_mode == "Release Notes": 
-            app_release_notes(session_state)
+            # Due to email policy change, disable this functionality for now.
+            # email_scenario = filename_column.button("Email scenario")
+            # if email_scenario:
+            #     agent = get_email_agent()
+            #     subject = f'{session_state.country.capitalize()} Routing tool: Scenario file {session_state.scenario_data["Scenario"]}'
+            #     body = "Please find the scenario file attached"
+            #     save_scenario(session_state.scenario_file, session_state.scenario_data)
+            #     agent.send(session_state.username, subject, body, "", msg_type="html", attach_file=session_state.scenario_file)
+            #     send_date = datetime.now().strftime('%m/%d/%Y %H:%M')
+            #     filename_column.markdown(f"###### Sent: {send_date}")
+                
+        try:
+            if routing_mode == "Upload data":
+                app_upload(session_state)
+            elif routing_mode == "Refine data":
+                if session_state.scenario_data is None:
+                    st.markdown(f"### {warning_scenario_message}")
+                else:
+                    app_refine(session_state)
+            elif routing_mode == "Solve scenario":
+                if session_state.scenario_data is None:
+                    st.markdown(f"### {warning_scenario_message}")
+                else:
+                    app_optimize(session_state)
+            elif routing_mode == "Review results":
+                if session_state.scenario_data is None:
+                    st.markdown(f"### {warning_scenario_message}")
+                elif pd.isna(session_state.scenario_data['Solved']):
+                    st.markdown(f"### {warning_solve_message}")
+                else:
+                    app_review(session_state)
+        except Exception as e:
+            st.error(f"Application Error: {e}\n{traceback.format_exc()}")
+    elif app_mode == "Tool Administration":
+        app_update_reference_data(session_state)
+    elif app_mode == "Order Evaluation": 
+        app_drorders(session_state)
+    elif app_mode == "Release Notes": 
+        app_release_notes(session_state)
        
 
 

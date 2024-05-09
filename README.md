@@ -79,7 +79,7 @@ Filling out the DRT Files, the following sheets need to be complete: Facility, L
 
 - For the Fleet Sheet, list all of the trucks available with its source (warehouse) location and note associated constraints and costs associated with the fleet. Note: base_cost is a fixed price for distance travelled where as fixed_cost is a flat cost applied to the total.
 
-- For the Fleet Exclusions Sheet, list trucks and source location in addition to which locations the trucks cannot go, these will be loaded into the DRO app but can be toggled in the app itself.
+- For the Fleet Exclusions Sheet, list trucks and source locations in addition to which locations the trucks cannot go, these will be loaded into the DRO app but can be toggled in the app itself.
 
 - For the Facility Groups Sheet (optional), allows for specific facilities to be delivered to in same dispatch.
 
@@ -91,9 +91,9 @@ Filling out the DRT Files, the following sheets need to be complete: Facility, L
 
 ## Replicating Predefined Routes
 
-If historical route information is available, it is possible to generate a baseline cost associated with these historical routes using the Predefined Routes. A baseline scenario optimization can be conducted by setting the `predefined_routes` option to `True` in the `baseline` portion of the `country_config.toml` file. This will allow for the toggle to become available in the Order Evaluation portion of the application. With this toggle on, the application will find the optimal route for predefined routes listed in the Order Evaluation File that is uploaded. This in most cases will provide the optimal solution; however, there are few circumstances where this will not be the case:
+If historical route information is available, it is possible to generate a baseline cost associated with these historical routes using the Predefined Routes. A baseline scenario optimization can be conducted by setting the `predefined_routes` option to `True` in the `baseline` portion of the `country_config.toml` file. This will allow for the toggle to become available in the Order Evaluation portion of the application. With this toggle on, the application will find the optimal route for predefined routes listed in the Order Evaluation File that is uploaded. This in most cases will provide the optimal solution; however, there are a few circumstances where this will not be the case:
 
-1. A predefined route is separated into two or more route as this would be more optimal. If this occurs, a message will be displayed to the user noting that this has in fact occurred. Additional steps would be necessary to correct this such as manually changing the fix cost in the DRT Fleet Tab and re-running the application.  *Note: this is a rare occurence that is likely to not occur.*
+1. A predefined route is separated into two or more route as this would be more optimal. If this occurs, a message will be displayed to the user noting that this has in fact occurred. Additional steps would be necessary to correct this such as manually changing the fix cost in the DRT Fleet Tab and re-running the application.  *Note: this is a rare occurrence that is likely to not occur.*
 2. If all vehicles of a specific type are used prior to completing the predefined_routes optimization, the `truck_optimize` optimization will ensure the most optimal assignment of trucks to specific routes in order to ensure that the most optimal route is presented.
 
 ## Generating the Fleet Restrictions:

@@ -12,7 +12,7 @@ from copy import deepcopy
 import math
 
 from DRO import DRO, DROFacility, DROVehicle, DROSpec, DROSpecDesc, DROINF
-from psm import env as psmenv
+# from psm import env as psmenv
 from scenario import initialize_scenario, read_scenario, save_scenario
 from truck_optimize import truck_optimize
 

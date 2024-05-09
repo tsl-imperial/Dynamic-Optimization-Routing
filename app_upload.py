@@ -69,8 +69,11 @@ def app_upload(session_state):
     if ref_file == "": 
         st.stop()
 
+
     session_state.ref_file = join(data_path, ref_file)
     session_state.warehouse = locate_warehouse(session_state.ref_file)
+
+    print(session_state)
     if session_state.warehouse == "": 
         st.error("The reference file has yet to be mapped to a dispatch origin. Please maintain REF_WAREHOUSE_MAPPING in code")
         st.stop()
